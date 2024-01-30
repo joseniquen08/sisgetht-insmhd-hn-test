@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  sisgetht_db:
+    image: mysql
+    environment:
+      - MYSQL_DATABASE=sisgetht_db
+      - MYSQL_ROOT_PASSWORD=123456
+    ports:
+      - 9000:3306
+
+  sisgetht_app:
+    container_name: sisgetht_app
+    build: .
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - sisgetht_db
+    links:
+      - sisgetht_db
+    ports:
+      - 9001:80
+
+  sisgetht_phpmyadmin:
+    container_name: sisgetht_phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 9002:80
+    environment:
+      - PMA_HOST=sisgetht_db
+      - PMA_ARBITRARY=1
+    depends_on:
+      - sisgetht_db
